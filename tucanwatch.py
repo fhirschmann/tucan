@@ -47,7 +47,7 @@ if __name__ == "__main__":
         while True:
             sleep(60 * 60)
 
-            grades2 = grades2set(grades(username, password))
+            grades2 = grades2set(get_grades(username, password))
             diff = grades2.difference(grades)
 
             if len(diff) > 0:
