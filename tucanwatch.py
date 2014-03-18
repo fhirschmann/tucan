@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+from __future__ import print_function
+import os
 
 import mechanize
 from lxml import html
@@ -35,26 +37,20 @@ if __name__ == "__main__":
     from netrc import netrc
 
     username, account, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
-
     grades = grades2set(get_grades(username, password))
 
     if "-p" in sys.argv:
-        print("\n".join(grades))
+        print(*grades, sep=os.linesep)
     else:
-        import subprocess
-        from time import sleep
+        import shelve
 
-        while True:
-            sleep(60 * 60)
+        data = shelve.open(os.path.expanduser("~/.tucan.grades"))
+        if "grades" not in data:
+            data["grades"] = set()
 
-            grades2 = grades2set(get_grades(username, password))
-            diff = grades2.difference(grades)
+        if data["grades"] != grades:
+            print("The following new grades are available:",
+                  *grades.difference(data["grades"]), sep=os.linesep)
 
-            if len(diff) > 0:
-                proc = subprocess.Popen(["mail", "-s", "New Grade in TuCaN", "fabian@0x0b.de"],
-                                        stdin=subprocess.PIPE)
-                proc.stdin.write("\n".join(diff))
-                proc.stdin.close()
-                proc.terminate()
-
-                grades = grades2
+        data["grades"] = grades
+        data.close()
