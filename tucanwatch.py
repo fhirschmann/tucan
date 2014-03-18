@@ -39,7 +39,7 @@ if __name__ == "__main__":
     username, account, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
     grades = grades2set(get_grades(username, password))
 
-    if "-p" in sys.argv:
+    if "-a" in sys.argv:
         print(*grades, sep=os.linesep)
     else:
         import shelve
@@ -49,8 +49,19 @@ if __name__ == "__main__":
             data["grades"] = set()
 
         if data["grades"] != grades:
-            print("The following new grades are available:",
-                  *grades.difference(data["grades"]), sep=os.linesep)
+            msg = os.linesep.join(grades.difference(data["grades"]))
+
+            if "-m" in sys.argv:
+                import subprocess
+
+                proc = subprocess.Popen(["mail", "-s", "New Grade in TuCaN",
+                                         sys.argv[sys.argv.index("-m") + 1]],
+                                        stdin=subprocess.PIPE)
+                proc.stdin.write(msg)
+                proc.stdin.close()
+                proc.terminate()
+            else:
+                print(msg)
 
         data["grades"] = grades
         data.close()
