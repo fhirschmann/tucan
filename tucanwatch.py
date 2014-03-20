@@ -32,6 +32,16 @@ def grades2set(grades):
     return set([e[0] + ": " + e[2] for e in grades])
 
 
+def mail(recipient, subject, body):
+    print(recipient)
+    import subprocess
+
+    proc = subprocess.Popen(["mail", "-s", subject, recipient],
+                            stdin=subprocess.PIPE)
+    proc.stdin.write(body)
+    proc.stdin.close()
+
+
 if __name__ == "__main__":
     import sys
     from netrc import netrc
@@ -52,14 +62,7 @@ if __name__ == "__main__":
             msg = os.linesep.join(grades.difference(data["grades"]))
 
             if "-m" in sys.argv:
-                import subprocess
-
-                proc = subprocess.Popen(["mail", "-s", "New Grade in TuCaN",
-                                         sys.argv[sys.argv.index("-m") + 1]],
-                                        stdin=subprocess.PIPE)
-                proc.stdin.write(msg)
-                proc.stdin.close()
-                proc.terminate()
+                mail(sys.argv[sys.argv.index("-m") + 1], "New Grade in TuCaN", msg)
             else:
                 print(msg)
 
