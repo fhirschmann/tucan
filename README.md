@@ -7,7 +7,7 @@ the campus management system of Technische Universität Darmstadt.
 
 Set your username and password:
 
-```bash
+```
 cat << EOF >> ~/.netrc
 machine www.tucan.tu-darmstadt.de
     login ab34abab
