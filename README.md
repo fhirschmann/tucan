@@ -23,6 +23,14 @@ Run
 tucanwatch.py -a
 ```
 
+to print all grades in the current semester or
+
+```bash
+tucanwatch.py
+```
+
+to print only new grades.
+
 ## Periodic checking
 
 Edit your crontab
