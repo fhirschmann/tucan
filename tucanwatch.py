@@ -33,7 +33,6 @@ def grades2set(grades):
 
 
 def mail(recipient, subject, body):
-    print(recipient)
     import subprocess
 
     proc = subprocess.Popen(["mail", "-s", subject, recipient],
