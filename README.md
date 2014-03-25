@@ -3,6 +3,14 @@
 Notifies you via email when there are new grades available in
 the campus management system of Technische Universität Darmstadt.
 
+## Installation
+
+```
+[ ! -d ~/bin ] && mkdir ~/bin
+curl -o ~/bin/tucanwatch.py https://raw.githubusercontent.com/fhirschmann/tucanwatch/master/tucanwatch.py
+chmod 755 ~/bin/tucanwatch.py
+```
+
 ## Setup
 
 Set your username and password:
