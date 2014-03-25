@@ -49,7 +49,7 @@ if __name__ == "__main__":
     grades = grades2set(get_grades(username, password))
 
     if "-a" in sys.argv:
-        print(*grades, sep=os.linesep)
+        print(os.linesep.join(grades).encode("utf-8"), sep=os.linesep)
     else:
         import shelve
 
@@ -58,7 +58,7 @@ if __name__ == "__main__":
             data["grades"] = set()
 
         if data["grades"] != grades:
-            msg = os.linesep.join(grades.difference(data["grades"]))
+            msg = os.linesep.join(grades.difference(data["grades"])).encode("utf-8")
 
             if "-m" in sys.argv:
                 mail(sys.argv[sys.argv.index("-m") + 1], "New Grade in TuCaN", msg)
