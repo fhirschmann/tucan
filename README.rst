@@ -31,7 +31,7 @@ Run
 
 .. code:: bash
 
-    tucan
+    tucan -a
 
 to print all grades in the current semester or
 
