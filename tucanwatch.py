@@ -22,9 +22,9 @@ def get_grades(username, password):
     tree = html.fromstring(br.response().read())
     tbody = tree.xpath("//table[@class='nb list']/tbody")[0]
 
-    grades = [[" ".join("".join(c for c in td.text if c.isalnum()
-                                or c in (".", " ", "-", ",")).strip().split())
-               for td in tr.findall("td")][:-1] for tr in tbody.findall("tr")]
+    grades = [[" ".join(td.text.strip().split())
+               for td in tr.findall("td")][:-1]
+              for tr in tbody.findall("tr")]
     return grades
 
 
@@ -45,7 +45,7 @@ if __name__ == "__main__":
     import sys
     from netrc import netrc
 
-    username, account, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
+    username, _, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
     grades = grades2set(get_grades(username, password))
 
     if "-a" in sys.argv:
