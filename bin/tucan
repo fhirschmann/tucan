@@ -1,31 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 from __future__ import print_function
 import os
+import sys
+import subprocess
+import shelve
+from netrc import netrc
 
-import mechanize
-from lxml import html
-
-
-def get_grades(username, password):
-    br = mechanize.Browser()
-    br.open("https://www.tucan.tu-darmstadt.de")
-    br.select_form(nr=0)
-    br.form["usrname"] = username
-    br.form["pass"] = password
-    br.submit()
-
-    br.follow_link(text_regex=u"^Prüfungen$")
-    br.follow_link(text_regex=u"^Semesterergebnisse$")
-    br.follow_link(text_regex=u"^Prüfungsergebnisse$")
-
-    tree = html.fromstring(br.response().read())
-    tbody = tree.xpath("//table[@class='nb list']/tbody")[0]
-
-    grades = [[" ".join(td.text.strip().split())
-               for td in tr.findall("td")][:-1]
-              for tr in tbody.findall("tr")]
-    return grades
+from tucanwatch import get_grades
 
 
 def grades2set(grades):
@@ -42,8 +23,6 @@ def mail(recipient, subject, body):
 
 
 if __name__ == "__main__":
-    import sys
-    from netrc import netrc
 
     username, _, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
     grades = grades2set(get_grades(username, password))
@@ -51,8 +30,6 @@ if __name__ == "__main__":
     if "-a" in sys.argv:
         print(os.linesep.join(grades).encode("utf-8"), sep=os.linesep)
     else:
-        import shelve
-
         data = shelve.open(os.path.expanduser("~/.tucan.grades"))
         if "grades" not in data:
             data["grades"] = set()
