@@ -7,6 +7,15 @@ the campus management system of Technische Universität Darmstadt.
 Installation
 ````````````
 
+It might be better to use your system's package manager to install
+the required dependencies:
+
+.. code:: bash
+
+    apt-get install python-mechanize python-lxml python-pip
+
+Then install tucanwatch via pip:
+
 .. code:: bash
 
     pip install git+git://github.com/fhirschmann/tucanwatch.git
