@@ -21,7 +21,7 @@ def get_grades(username, password):
     tree = html.fromstring(br.response().read())
     tbody = tree.xpath("//table[@class='nb list']/tbody")[0]
 
-    grades = [[" ".join(td.text.strip().split())
+    grades = [[" ".join(unicode(td.text).strip().split())
                for td in tr.findall("td")][:-1]
               for tr in tbody.findall("tr")]
     return grades
