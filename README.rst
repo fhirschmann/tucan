@@ -63,4 +63,8 @@ And add this in order to check every 60 minutes:
 
 .. code:: bash
 
-    */60 * * * * /usr/local/bin/tucan -m me@email.com 2>&1 >>/dev/null
+    */60 * * * * /usr/local/bin/tucan -m me@email.com
+
+If tucan is down and you don't want to receive errors, run
+
+    */60 * * * * /usr/local/bin/tucan -q -m me@email.com
