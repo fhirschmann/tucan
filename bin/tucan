@@ -2,7 +2,6 @@
 from __future__ import print_function
 import os
 import sys
-import subprocess
 import shelve
 from netrc import netrc
 
@@ -22,12 +21,11 @@ def mail(recipient, subject, body):
     proc.stdin.close()
 
 
-if __name__ == "__main__":
-
+def main(args):
     username, _, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
     grades = grades2set(get_grades(username, password))
 
-    if "-a" in sys.argv:
+    if "-a" in args:
         print(os.linesep.join(grades).encode("utf-8"), sep=os.linesep)
     else:
         data = shelve.open(os.path.expanduser("~/.tucan.grades"))
@@ -37,10 +35,20 @@ if __name__ == "__main__":
         if data["grades"] != grades:
             msg = os.linesep.join(grades.difference(data["grades"])).encode("utf-8")
 
-            if "-m" in sys.argv:
-                mail(sys.argv[sys.argv.index("-m") + 1], "New Grade in TuCaN", msg)
+            if "-m" in args:
+                mail(args[args.index("-m") + 1], "New Grade in TuCaN", msg)
             else:
                 print(msg)
 
         data["grades"] = grades
         data.close()
+
+
+if __name__ == "__main__":
+    if "-q" in sys.argv:
+        try:
+            main(sys.argv)
+        except:
+            pass
+    else:
+        main(sys.argv)
