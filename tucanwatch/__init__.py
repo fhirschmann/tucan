@@ -8,7 +8,7 @@ from lxml import html
 
 def get_grades(username, password):
     br = mechanize.Browser()
-    br.open("https://www.tucan.tu-darmstadt.de")
+    br.open("https://www.tucan.tu-darmstadt.de/scripts/mgrqcgi?APPNAME=CampusNet&PRGNAME=STARTPAGE_DISPATCH&ARGUMENTS=-N000000000000001")
     br.select_form(nr=0)
     br.form["usrname"] = username
     br.form["pass"] = password
