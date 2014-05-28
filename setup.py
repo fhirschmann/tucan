@@ -6,7 +6,7 @@ from setuptools import setup
 
 setup(
     name="tucanwatch",
-    version="0.6",
+    version="0.7",
     description="New Grades Notification Script for TuCaN",
     long_description=open(path.join(path.dirname(__file__), "README.rst")).read(),
     url="http://github.com/fhirschmann/tucanwatch",
