@@ -1,5 +1,5 @@
-tucanwatch
-----------
+tucan
+-----
 
 Notifies you via email when there are new grades available in
 the campus management system of Technische Universität Darmstadt.
@@ -70,3 +70,21 @@ This utility can also send notifications on Linux systems:
 .. code:: bash
 
     */60 * * * * /usr/local/bin/tucan -n
+
+Help
+````
+
+.. code:: text
+
+    usage: tucan [-h] [--mail MAIL] [--db DB] [--new] [--notify] [--json]
+
+    TUCaN CLI
+
+    optional arguments:
+      -h, --help            show this help message and exit
+      --mail MAIL, -m MAIL  send email to this address on changes (default: None)
+      --db DB               database file (default: /home/fabian/.tucandb)
+      --new                 print only new grades (default: False)
+      --notify, -n          send desktop notification on new grades (default:
+                            False)
+      --json, -j            output json (default: False)
