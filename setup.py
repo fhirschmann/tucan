@@ -19,6 +19,5 @@ setup(
         "mechanize",
     ],
     keywords="tucan tu darmstadt technische universität",
-    packages=["tucan"],
     scripts=["bin/tucan"],
 )
