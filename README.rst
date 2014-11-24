@@ -14,11 +14,11 @@ the required dependencies:
 
     apt-get install python-mechanize python-lxml python-pip
 
-Then install tucanwatch via pip:
+Then install tucan CLI via pip:
 
 .. code:: bash
 
-    pip install git+git://github.com/fhirschmann/tucanwatch.git
+    pip install git+git://github.com/fhirschmann/tucan.git
 
 Setup
 `````
