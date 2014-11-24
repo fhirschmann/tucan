@@ -40,13 +40,13 @@ Run
 
 .. code:: bash
 
-    tucan -a
+    tucan
 
-to print all grades in the current semester or
+to print all grades in the current semester:
 
 .. code:: bash
 
-    tucan
+    tucan -n
 
 to print only new grades.
 
@@ -65,8 +65,8 @@ And add this in order to check every 60 minutes:
 
     */60 * * * * /usr/local/bin/tucan -m me@email.com
 
-If tucan is down and you don't want to receive errors, use
+This utility can also send notifications on Linux systems:
 
 .. code:: bash
 
-    */60 * * * * /usr/local/bin/tucan -q -m me@email.com
+    */60 * * * * /usr/local/bin/tucan -n

@@ -1,15 +1,11 @@
 #!/usr/bin/env python
 from __future__ import print_function
 import os
-import sys
-import shelve
+import argparse
+import md5
 from netrc import netrc
 
 from tucanwatch import get_grades
-
-
-def grades2set(grades):
-    return set([e[0] + ": " + e[2] for e in grades])
 
 
 def mail(recipient, subject, body):
@@ -21,34 +17,67 @@ def mail(recipient, subject, body):
     proc.stdin.close()
 
 
-def main(args):
+def notify(msg):
+    from subprocess import Popen
+
+    Popen(['notify-send', msg])
+
+
+def parse_netrc():
     username, _, password = netrc().authenticators("www.tucan.tu-darmstadt.de")
-    grades = grades2set(get_grades(username, password))
+    return username, password
 
-    if "-a" in args:
-        print(os.linesep.join(grades).encode("utf-8"), sep=os.linesep)
+
+def update_db(db, grades):
+    if os.path.isfile(db):
+        with open(db) as db_fp:
+            old_digests = set(db_fp.read().split(os.linesep))
     else:
-        data = shelve.open(os.path.expanduser("~/.tucan.grades"))
-        if "grades" not in data:
-            data["grades"] = set()
+        old_digests = set()
 
-        if data["grades"] != grades:
-            msg = os.linesep.join(grades.difference(data["grades"])).encode("utf-8")
+    new_digests = {md5.new(repr(g)).digest(): g for g in grades}
 
-            if "-m" in args:
-                mail(args[args.index("-m") + 1], "New Grade in TuCaN", msg)
-            else:
-                print(msg)
+    if set(new_digests.keys()) != old_digests:
+        with open(db, "w") as db_fp:
+            db_fp.write(os.linesep.join(old_digests.union(new_digests.keys())))
 
-        data["grades"] = grades
-        data.close()
+        return [v for k, v in new_digests.items() if k not in old_digests]
+
+    return None
 
 
 if __name__ == "__main__":
-    if "-q" in sys.argv:
-        try:
-            main(sys.argv)
-        except:
-            pass
+    parser = argparse.ArgumentParser(description="TUCaN CLI",
+                                     formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+    parser.add_argument("--mail", "-m", type=str,
+                        help="send email to this address on changes")
+    parser.add_argument("--db", type=str,
+                        default=os.path.expanduser("~/.tucandb"),
+                        help="database file")
+    parser.add_argument("--new", help="print only new grades", action="store_true")
+    parser.add_argument("--notify", "-n", action="store_true",
+                        help="send desktop notification on new grades")
+    parser.add_argument("--json", "-j", help="output json", action="store_true")
+    args = parser.parse_args()
+
+    username, password = parse_netrc()
+    grades = get_grades(username, password)
+
+    if args.mail or args.new or args.notify:
+        new_grades = update_db(args.db, grades)
+
+        if new_grades:
+            msg = os.linesep.join([g[0] + ": " + g[2] for g in new_grades])
+            if args.mail:
+                mail(args.mail, "New Grade in TUCaN", msg)
+            elif args.notify:
+                notify(msg)
+            else:
+                print(msg)
     else:
-        main(sys.argv)
+        if args.json:
+            import json
+            print(json.dumps(list(grades)))
+        else:
+            for grade in grades:
+                print(grade[0] + ": " + grade[2])
