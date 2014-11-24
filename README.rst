@@ -69,7 +69,7 @@ This utility can also send notifications on Linux systems:
 
 .. code:: bash
 
-    */60 * * * * /usr/local/bin/tucan -n
+    */60 * * * * DISPLAY=":0" /usr/local/bin/tucan -n
 
 Help
 ````
