@@ -2,8 +2,8 @@
 from __future__ import print_function
 import os
 import argparse
-import md5
 from netrc import netrc
+from hashlib import md5
 
 from tucanwatch import get_grades
 
@@ -35,7 +35,7 @@ def update_db(db, grades):
     else:
         old_digests = set()
 
-    new_digests = {md5.new(repr(g)).digest(): g for g in grades}
+    new_digests = {md5(repr(g)).hexdigest(): g for g in grades}
 
     if set(new_digests.keys()) != old_digests:
         with open(db, "w") as db_fp:
