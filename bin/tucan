@@ -5,7 +5,7 @@ import argparse
 from netrc import netrc
 from hashlib import md5
 
-from tucanwatch import get_grades
+from tucan import get_grades
 
 
 def mail(recipient, subject, body):
